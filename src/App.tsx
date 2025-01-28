@@ -50,7 +50,7 @@ export default class App extends Component<{}, State> {
         return { ...prev, animeList: data };
       });
     } catch (error) {
-      console.error('Error fetching data:', error); // Handle errors gracefully
+      console.error('Error fetching data:', error);
     }
   };
 
