@@ -1,0 +1,20 @@
+@use '../../styles/variables';
+
+
+.input {
+  border-radius: variables.$primary-border-radius;
+  background-color: variables.$secondary-color-lighter;
+  color: variables.$primary-color;
+  padding: 10px 20px;
+  width: 100%;
+  min-width: 150px;
+
+  &::placeholder {
+    color: variables.$light-gray;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: variables.$secondary-color-light;
+  }
+}
