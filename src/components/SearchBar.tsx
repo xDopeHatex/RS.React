@@ -1,18 +1,30 @@
 import './SearchBar.scss';
-import { Component } from 'react';
+import { ChangeEventHandler, Component, FormEvent } from 'react';
 import Input from './UI/Input.tsx';
 import Button from './UI/Button.tsx';
+import Wrapper from './UI/Wrapper.tsx';
 
-export default class SearchBar extends Component {
+export default class SearchBar extends Component<{
+  onChange: ChangeEventHandler<HTMLInputElement>;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  value: string;
+}> {
   render() {
+    const { onSubmit } = this.props;
+    const { onChange } = this.props;
+    const { value } = this.props;
+
     return (
-      <div className="search-bar">
-        <Input
-          placeholder={'Type what kind of beer are you looking for?'}
-          onChange={() => console.log('onChange')}
-        />
-        <Button title="Search" onClick={() => console.log('yeah')} />
-      </div>
+      <Wrapper>
+        <form className="search-bar" onSubmit={onSubmit}>
+          <Input
+            value={value}
+            placeholder={'Type what kind of anime are you looking for?'}
+            onChange={onChange}
+          />
+          <Button title="Search" type="submit" />
+        </form>
+      </Wrapper>
     );
   }
 }
