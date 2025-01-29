@@ -5,6 +5,8 @@ import Header from './components/Header.tsx';
 import { getAnimeByName } from './services/api.ts';
 import Wrapper from './components/UI/Wrapper.tsx';
 import Card from './components/UI/Card.tsx';
+import Spinner from './components/UI/Spinner.tsx';
+import { AxiosError } from 'axios';
 
 type AnimeItem = {
   genres: { name: string }[];
@@ -12,33 +14,45 @@ type AnimeItem = {
   title_english: string;
   title: string;
   title_japanese: string;
+  synopsis: string;
 };
 
 type State = {
   animeName: string;
   animeList: AnimeItem[];
-  firstLoad: boolean;
+  isLoading: boolean;
+  errorMessage: string;
 };
 
 export default class App extends Component<{}, State> {
   state: State = {
     animeName: localStorage.getItem('animeName') || '',
     animeList: [],
-    firstLoad: true,
+    isLoading: false,
+    errorMessage: '',
   };
 
-  setAnimeNameHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  createSetStateHandler = (
+    value: string | number | boolean,
+    stateName: keyof State
+  ) =>
     this.setState((prev) => {
-      return { ...prev, animeName: e.target.value.toLowerCase().trim() };
+      return { ...prev, [stateName]: value };
     });
-  };
 
-  getAnimeList = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    localStorage.setItem('animeName', this.state.animeName);
-    this.setState((prev) => {
-      return { ...prev, firstLoad: false };
-    });
+  setAnimeNameHandler = (e: ChangeEvent<HTMLInputElement>) =>
+    this.createSetStateHandler(
+      e.target.value.toLowerCase().trim(),
+      'animeName'
+    );
+
+  setLoadingHandler = (value: boolean) =>
+    this.createSetStateHandler(value, 'isLoading');
+
+  setErrorMessageHandler = (value: string) =>
+    this.createSetStateHandler(value, 'errorMessage');
+
+  fetchAnimeListByName = async () => {
     try {
       const {
         data: { data },
@@ -49,36 +63,40 @@ export default class App extends Component<{}, State> {
       this.setState((prev) => {
         return { ...prev, animeList: data };
       });
-    } catch (error) {
-      console.error('Error fetching data:', error);
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        this.setErrorMessageHandler(error.message);
+      } else {
+        this.setErrorMessageHandler('An unknown error occurred');
+      }
+    } finally {
+      this.setLoadingHandler(false);
     }
   };
 
-  async componentDidMount() {
-    if (this.state.animeName) {
-      this.setState((prev) => {
-        return { ...prev, firstLoad: false };
-      });
-      try {
-        const {
-          data: { data },
-        }: { data: { data: AnimeItem[] } } = await getAnimeByName(
-          this.state.animeName
-        );
+  getAnimeList = async (e: FormEvent<HTMLFormElement>) => {
+    this.setErrorMessageHandler('');
 
-        this.setState((prev) => {
-          return { ...prev, animeList: data };
-        });
-      } catch (error) {
-        console.error('Error fetching data:', error); // Handle errors gracefully
-      }
-    }
+    this.setLoadingHandler(true);
+
+    e.preventDefault();
+
+    localStorage.setItem('animeName', this.state.animeName);
+
+    await this.fetchAnimeListByName();
+  };
+
+  async componentDidMount() {
+    this.setLoadingHandler(true);
+
+    await this.fetchAnimeListByName();
   }
 
   render() {
     const { animeList } = this.state;
     const { animeName } = this.state;
-    const { firstLoad } = this.state;
+    const { isLoading } = this.state;
+    const { errorMessage } = this.state;
 
     return (
       <div className="App">
@@ -89,29 +107,42 @@ export default class App extends Component<{}, State> {
           onSubmit={this.getAnimeList}
         />
         <Wrapper>
-          {animeList?.length < 1 &&
-            ((firstLoad && (
-              <h2>Here's gonna be list of anime after you submit a name</h2>
-            )) || <h2>Sorry, there's nothing to show. Try again</h2>)}
-          <div className="table grid-parent">
-            {animeList.map(
-              ({
-                title_english,
-                title_japanese,
-                title,
-                images: {
-                  jpg: { large_image_url },
-                },
-              }) => (
-                <div className="grid-child">
-                  <Card
-                    title={title_english || title || title_japanese}
-                    imgLink={large_image_url}
-                  />
-                </div>
-              )
-            )}
-          </div>
+          {errorMessage ? (
+            <h2>{errorMessage}</h2>
+          ) : animeList?.length < 1 && !isLoading ? (
+            <h2>Sorry, there's nothing to show. Try again</h2>
+          ) : isLoading ? (
+            <div className="spinner-wrapper">
+              <Spinner />
+            </div>
+          ) : (
+            <div className="table grid-parent">
+              {animeList.map(
+                (
+                  {
+                    title_english,
+                    title_japanese,
+                    title,
+                    images: {
+                      jpg: { large_image_url },
+                    },
+                    genres,
+                  },
+                  index
+                ) => (
+                  <div className="grid-child" key={index}>
+                    <Card
+                      description={genres.map(({ name }) => (
+                        <span key={name}>{name}</span>
+                      ))}
+                      title={title_english || title || title_japanese}
+                      imgLink={large_image_url}
+                    />
+                  </div>
+                )
+              )}
+            </div>
+          )}
         </Wrapper>
       </div>
     );

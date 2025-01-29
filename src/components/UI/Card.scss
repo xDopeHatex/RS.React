@@ -14,6 +14,9 @@ img {
 }
 
 figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   background-color: #222;
   color: #fff;
   font: italic smaller sans-serif;
@@ -21,4 +24,11 @@ figcaption {
   text-align: center;
   border-radius: 0 0 10px 10px;
 
+}
+
+.description {
+
+display: flex;
+  justify-content: center;
+  gap: 0.5rem;
 }

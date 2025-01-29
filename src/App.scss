@@ -11,7 +11,7 @@
 
 .grid-parent {
   display: grid;
-  gap: 2rem;
+  gap: 4rem;
   grid-template-columns:
     repeat(5, 1fr);
   grid-template-rows:
@@ -41,5 +41,11 @@
   grid-column: span 2; /* spans 2 columns */
   grid-row: span 1; /* spans 2 rows */
 
+}
+
+.spinner-wrapper {
+  display: grid;
+  place-content: center;
+  width: 100%;
 }
 
