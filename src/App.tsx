@@ -7,6 +7,10 @@ import Wrapper from './components/UI/Wrapper.tsx';
 import Card from './components/UI/Card.tsx';
 import Spinner from './components/UI/Spinner.tsx';
 import { AxiosError } from 'axios';
+import ErrorBoundary from './components/ErrorBoundary.tsx';
+import ErrorComponent from './components/ErrorComponent.tsx';
+import Button from './components/UI/Button.tsx';
+import FallbackPage from './components/UI/FallbackPage.tsx';
 
 type AnimeItem = {
   genres: { name: string }[];
@@ -22,6 +26,7 @@ type State = {
   animeList: AnimeItem[];
   isLoading: boolean;
   errorMessage: string;
+  isShowErrorComponent: boolean;
 };
 
 export default class App extends Component<{}, State> {
@@ -30,6 +35,7 @@ export default class App extends Component<{}, State> {
     animeList: [],
     isLoading: false,
     errorMessage: '',
+    isShowErrorComponent: false,
   };
 
   createSetStateHandler = (
@@ -51,6 +57,9 @@ export default class App extends Component<{}, State> {
 
   setErrorMessageHandler = (value: string) =>
     this.createSetStateHandler(value, 'errorMessage');
+
+  setIsShowErrorComponentHandler = (value: boolean) =>
+    this.createSetStateHandler(value, 'isShowErrorComponent');
 
   fetchAnimeListByName = async () => {
     try {
@@ -93,58 +102,71 @@ export default class App extends Component<{}, State> {
   }
 
   render() {
-    const { animeList } = this.state;
-    const { animeName } = this.state;
-    const { isLoading } = this.state;
-    const { errorMessage } = this.state;
+    const {
+      animeList,
+      animeName,
+      isLoading,
+      errorMessage,
+      isShowErrorComponent,
+    } = this.state;
 
     return (
-      <div className="App">
-        <Header />
-        <SearchBar
-          value={animeName}
-          onChange={this.setAnimeNameHandler}
-          onSubmit={this.getAnimeList}
-        />
-        <Wrapper>
-          {errorMessage ? (
-            <h2>{errorMessage}</h2>
-          ) : animeList?.length < 1 && !isLoading ? (
-            <h2>Sorry, there's nothing to show. Try again</h2>
-          ) : isLoading ? (
-            <div className="spinner-wrapper">
-              <Spinner />
-            </div>
-          ) : (
-            <div className="table grid-parent">
-              {animeList.map(
-                (
-                  {
-                    title_english,
-                    title_japanese,
-                    title,
-                    images: {
-                      jpg: { large_image_url },
+      <ErrorBoundary fallback={<FallbackPage />}>
+        <div className="App">
+          <Header />
+          <SearchBar
+            value={animeName}
+            onChange={this.setAnimeNameHandler}
+            onSubmit={this.getAnimeList}
+          />
+          <Wrapper>
+            <Button
+              title={'Error Boundary Test'}
+              onClick={() => this.setIsShowErrorComponentHandler(true)}
+            />
+
+            {isShowErrorComponent && <ErrorComponent />}
+          </Wrapper>
+          <Wrapper>
+            {errorMessage ? (
+              <h2>{errorMessage}</h2>
+            ) : animeList?.length < 1 && !isLoading ? (
+              <h2>Sorry, there's nothing to show. Try again</h2>
+            ) : isLoading ? (
+              <div className="spinner-wrapper">
+                <Spinner />
+              </div>
+            ) : (
+              <div className="table grid-parent">
+                {animeList.map(
+                  (
+                    {
+                      title_english,
+                      title_japanese,
+                      title,
+                      images: {
+                        jpg: { large_image_url },
+                      },
+                      genres,
                     },
-                    genres,
-                  },
-                  index
-                ) => (
-                  <div className="grid-child" key={index}>
-                    <Card
-                      description={genres.map(({ name }) => (
-                        <span key={name}>{name}</span>
-                      ))}
-                      title={title_english || title || title_japanese}
-                      imgLink={large_image_url}
-                    />
-                  </div>
-                )
-              )}
-            </div>
-          )}
-        </Wrapper>
-      </div>
+                    index
+                  ) => (
+                    <div className="grid-child" key={index}>
+                      <Card
+                        description={genres.map(({ name }) => (
+                          <span key={name}>{name}</span>
+                        ))}
+                        title={title_english || title || title_japanese}
+                        imgLink={large_image_url}
+                      />
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+          </Wrapper>
+        </div>
+      </ErrorBoundary>
     );
   }
 }
