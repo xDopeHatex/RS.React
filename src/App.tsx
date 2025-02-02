@@ -29,7 +29,7 @@ type State = {
   isShowErrorComponent: boolean;
 };
 
-export default class App extends Component<{}, State> {
+export default class App extends Component {
   state: State = {
     animeName: localStorage.getItem('animeName') || '',
     animeList: [],
@@ -131,7 +131,7 @@ export default class App extends Component<{}, State> {
             {errorMessage ? (
               <h2>{errorMessage}</h2>
             ) : animeList?.length < 1 && !isLoading ? (
-              <h2>Sorry, there's nothing to show. Try again</h2>
+              <h2>Sorry, there is nothing to show. Try again</h2>
             ) : isLoading ? (
               <div className="spinner-wrapper">
                 <Spinner />

@@ -7,7 +7,7 @@ export default class Header extends Component {
     return (
       <Wrapper>
         <header>
-          <h1>Find Anime that you've always dreamt of!</h1>
+          <h1>Find Anime that you have always dreamt of!</h1>
         </header>
       </Wrapper>
     );
