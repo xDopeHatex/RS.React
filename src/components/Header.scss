@@ -1,0 +1,8 @@
+@use '../styles/variables';
+
+header {
+  display: flex;
+  color: variables.$secondary-color;
+  font-size: 1.8rem;
+  max-width: 700px;
+}
