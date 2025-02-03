@@ -1,4 +1,3 @@
-import './SearchBar.scss';
 import { ChangeEventHandler, Component, FormEvent } from 'react';
 import Input from './UI/Input.tsx';
 import Button from './UI/Button.tsx';
@@ -16,7 +15,10 @@ export default class SearchBar extends Component<{
 
     return (
       <Wrapper>
-        <form className="search-bar" onSubmit={onSubmit}>
+        <form
+          className="flex p-5 border-2 border-secondary-color-light rounded-primary-border-radius w-full gap-5 shadow-md shadow-secondary-color-light"
+          onSubmit={onSubmit}
+        >
           <Input
             value={value}
             placeholder={'Type what kind of anime are you looking for?'}

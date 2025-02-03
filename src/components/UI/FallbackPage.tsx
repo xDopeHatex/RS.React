@@ -1,4 +1,3 @@
-import './FallbackPage.scss';
 import { Component } from 'react';
 import Wrapper from './Wrapper.tsx';
 

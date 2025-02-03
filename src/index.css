@@ -1,60 +1,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@import "tailwindcss";
+
+
+
+@theme {
+    --color-primary-color: #005e83;
+    --color-secondary-color: #00c898;
+    --color-secondary-color-light: #e6fcf6;
+    --color-secondary-color-lighter: #eff6f8;
+    --color-light-gray: #d8d8d8;
+    --color-dark-gray: #444444;
+    --color-black: #000000;
+    --color-white: #ffffff;
+    --radius-primary-border-radius: 40px;
+    --transition-transition-duration: 0.2s;
 }
 
-html,
-body {
-  height: 100%;
-  width: 100%;
+
+
+
+.grid-child:nth-child(5n) {
+    grid-column: span 2;
+    grid-row: span 2;
 }
 
-body {
-  font-family: 'Lato', Arial, sans-serif;
-  line-height: 1;
+.grid-child:nth-child(4n) {
+    grid-column: span 1;
+    grid-row: span 2;
 }
 
-ol,
-ul {
-  list-style: none;
+.grid-child:nth-child(3n) {
+    grid-column: span 2;
+    grid-row: span 2;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
+.grid-child:nth-child(6n) {
+    grid-column: span 2;
+    grid-row: span 1;
 }
 
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
 
-img,
-video {
-  max-width: 100%;
-  height: auto;
-}
-
-button,
-input {
-  all: unset; /* Resets all inherited styles */
-  box-sizing: border-box; /* Ensure consistent box model */
-}
-
-/* Optional: Add default styling for usability */
-button,
-input {
-  display: inline-block; /* Ensures proper layout */
-  font-family: inherit; /* Inherits font from parent */
-  font-size: inherit; /* Inherits font size */
-  line-height: inherit; /* Inherits line height */
-  color: inherit; /* Inherits text color */
-}
-
-button {
-  cursor: pointer; /* Ensures buttons have pointer cursor */
-}
-
-/*# sourceMappingURL=index.css.map */

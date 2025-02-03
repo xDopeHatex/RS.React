@@ -1,4 +1,3 @@
-import './App.scss';
 import { ChangeEvent, Component, FormEvent } from 'react';
 import SearchBar from './components/SearchBar.tsx';
 import Header from './components/Header.tsx';
@@ -112,7 +111,7 @@ export default class App extends Component {
 
     return (
       <ErrorBoundary fallback={<FallbackPage />}>
-        <div className="App">
+        <div className="py-[60px] h-screen w-screen">
           <Header />
           <SearchBar
             value={animeName}
@@ -133,11 +132,11 @@ export default class App extends Component {
             ) : animeList?.length < 1 && !isLoading ? (
               <h2>Sorry, there is nothing to show. Try again</h2>
             ) : isLoading ? (
-              <div className="spinner-wrapper">
+              <div className="grid place-content-center w-full">
                 <Spinner />
               </div>
             ) : (
-              <div className="table grid-parent">
+              <div className="w-full grid gap-16 grid-cols-5 grid-rows-[repeat(5,150px)]">
                 {animeList.map(
                   (
                     {

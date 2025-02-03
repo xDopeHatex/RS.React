@@ -1,4 +1,3 @@
-import './Card.scss';
 import { Component, ReactNode } from 'react';
 
 export default class Card extends Component<{
@@ -11,11 +10,15 @@ export default class Card extends Component<{
     const { imgLink } = this.props;
     const { description } = this.props;
     return (
-      <figure>
-        <img src={imgLink} alt={`image of the ${title} anime`} />
-        <figcaption>
+      <figure className="rounded-[10px] flex flex-col h-full shadow-md shadow-black/20 shadow-lg shadow-black/19">
+        <img
+          className="rounded-t-[10px] h-full object-cover"
+          src={imgLink}
+          alt={`image of the ${title} anime`}
+        />
+        <figcaption className="flex flex-col gap-2 bg-[#222] text-white italic text-sm sans-serif p-1 text-center rounded-b-[10px]">
           <p>{title}</p>
-          <p className="description">{description}</p>
+          <p className="flex justify-center gap-2">{description}</p>
         </figcaption>
       </figure>
     );
