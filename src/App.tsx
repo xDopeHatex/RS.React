@@ -29,12 +29,6 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [isShowErrorComponent, setIsShowErrorComponent] = useState(false);
 
-  const setAnimeNameHandler = (e: ChangeEvent<HTMLInputElement>) =>
-    setAnimeName(e.target.value);
-
-  const setIsShowErrorComponentHandler = (value: boolean) =>
-    setIsShowErrorComponent(value);
-
   const fetchAnimeListByName = async () => {
     setIsLoading(true);
     try {
@@ -56,13 +50,9 @@ const App = () => {
 
   const getAnimeList = async (e: FormEvent<HTMLFormElement>) => {
     setErrorMessage('');
-
     setIsLoading(true);
-
     e.preventDefault();
-
     localStorage.setItem('animeName', animeName);
-
     await fetchAnimeListByName();
   };
 
@@ -77,13 +67,15 @@ const App = () => {
         <Header />
         <SearchBar
           value={animeName}
-          onChange={setAnimeNameHandler}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setAnimeName(e.target.value)
+          }
           onSubmit={getAnimeList}
         />
         <Wrapper>
           <Button
             title={'Error Boundary Test'}
-            onClick={() => setIsShowErrorComponentHandler(true)}
+            onClick={() => setIsShowErrorComponent(true)}
           />
 
           {isShowErrorComponent && <ErrorComponent />}
