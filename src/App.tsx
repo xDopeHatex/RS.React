@@ -1,4 +1,4 @@
-import { ChangeEvent, Component, FormEvent } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import SearchBar from './components/SearchBar.tsx';
 import Header from './components/Header.tsx';
 import { getAnimeByName } from './services/api.ts';
@@ -20,152 +20,115 @@ type AnimeItem = {
   synopsis: string;
 };
 
-type State = {
-  animeName: string;
-  animeList: AnimeItem[];
-  isLoading: boolean;
-  errorMessage: string;
-  isShowErrorComponent: boolean;
-};
+const App = () => {
+  const [animeName, setAnimeName] = useState(
+    localStorage.getItem('animeName') || ''
+  );
+  const [animeList, setAnimeList] = useState<AnimeItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isShowErrorComponent, setIsShowErrorComponent] = useState(false);
 
-export default class App extends Component {
-  state: State = {
-    animeName: localStorage.getItem('animeName') || '',
-    animeList: [],
-    isLoading: false,
-    errorMessage: '',
-    isShowErrorComponent: false,
-  };
+  const setAnimeNameHandler = (e: ChangeEvent<HTMLInputElement>) =>
+    setAnimeName(e.target.value);
 
-  createSetStateHandler = (
-    value: string | number | boolean,
-    stateName: keyof State
-  ) =>
-    this.setState((prev) => {
-      return { ...prev, [stateName]: value };
-    });
+  const setIsShowErrorComponentHandler = (value: boolean) =>
+    setIsShowErrorComponent(value);
 
-  setAnimeNameHandler = (e: ChangeEvent<HTMLInputElement>) =>
-    this.createSetStateHandler(
-      e.target.value.toLowerCase().trim(),
-      'animeName'
-    );
-
-  setLoadingHandler = (value: boolean) =>
-    this.createSetStateHandler(value, 'isLoading');
-
-  setErrorMessageHandler = (value: string) =>
-    this.createSetStateHandler(value, 'errorMessage');
-
-  setIsShowErrorComponentHandler = (value: boolean) =>
-    this.createSetStateHandler(value, 'isShowErrorComponent');
-
-  fetchAnimeListByName = async () => {
+  const fetchAnimeListByName = async () => {
+    setIsLoading(true);
     try {
       const {
         data: { data },
-      }: { data: { data: AnimeItem[] } } = await getAnimeByName(
-        this.state.animeName
-      );
+      }: { data: { data: AnimeItem[] } } = await getAnimeByName(animeName);
 
-      this.setState((prev) => {
-        return { ...prev, animeList: data };
-      });
+      setAnimeList(data);
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        this.setErrorMessageHandler(error.message);
+        setErrorMessage(error.message);
       } else {
-        this.setErrorMessageHandler('An unknown error occurred');
+        setErrorMessage('An unknown error occurred');
       }
     } finally {
-      this.setLoadingHandler(false);
+      setIsLoading(false);
     }
   };
 
-  getAnimeList = async (e: FormEvent<HTMLFormElement>) => {
-    this.setErrorMessageHandler('');
+  const getAnimeList = async (e: FormEvent<HTMLFormElement>) => {
+    setErrorMessage('');
 
-    this.setLoadingHandler(true);
+    setIsLoading(true);
 
     e.preventDefault();
 
-    localStorage.setItem('animeName', this.state.animeName);
+    localStorage.setItem('animeName', animeName);
 
-    await this.fetchAnimeListByName();
+    await fetchAnimeListByName();
   };
 
-  async componentDidMount() {
-    this.setLoadingHandler(true);
+  useEffect(() => {
+    const fetchData = async () => await fetchAnimeListByName();
+    fetchData();
+  }, []);
 
-    await this.fetchAnimeListByName();
-  }
-
-  render() {
-    const {
-      animeList,
-      animeName,
-      isLoading,
-      errorMessage,
-      isShowErrorComponent,
-    } = this.state;
-
-    return (
-      <ErrorBoundary fallback={<FallbackPage />}>
-        <div className="py-[60px] h-screen w-screen">
-          <Header />
-          <SearchBar
-            value={animeName}
-            onChange={this.setAnimeNameHandler}
-            onSubmit={this.getAnimeList}
+  return (
+    <ErrorBoundary fallback={<FallbackPage />}>
+      <div className="py-[60px] h-screen w-screen">
+        <Header />
+        <SearchBar
+          value={animeName}
+          onChange={setAnimeNameHandler}
+          onSubmit={getAnimeList}
+        />
+        <Wrapper>
+          <Button
+            title={'Error Boundary Test'}
+            onClick={() => setIsShowErrorComponentHandler(true)}
           />
-          <Wrapper>
-            <Button
-              title={'Error Boundary Test'}
-              onClick={() => this.setIsShowErrorComponentHandler(true)}
-            />
 
-            {isShowErrorComponent && <ErrorComponent />}
-          </Wrapper>
-          <Wrapper>
-            {errorMessage ? (
-              <h2>{errorMessage}</h2>
-            ) : animeList?.length < 1 && !isLoading ? (
-              <h2>Sorry, there is nothing to show. Try again</h2>
-            ) : isLoading ? (
-              <div className="grid place-content-center w-full">
-                <Spinner />
-              </div>
-            ) : (
-              <div className="w-full grid gap-16 grid-cols-5 grid-rows-[repeat(5,150px)]">
-                {animeList.map(
-                  (
-                    {
-                      title_english,
-                      title_japanese,
-                      title,
-                      images: {
-                        jpg: { large_image_url },
-                      },
-                      genres,
+          {isShowErrorComponent && <ErrorComponent />}
+        </Wrapper>
+        <Wrapper>
+          {errorMessage ? (
+            <h2>{errorMessage}</h2>
+          ) : animeList?.length < 1 && !isLoading ? (
+            <h2>Sorry, there is nothing to show. Try again</h2>
+          ) : isLoading ? (
+            <div className="grid place-content-center w-full">
+              <Spinner />
+            </div>
+          ) : (
+            <div className="w-full grid gap-16 grid-cols-5 grid-rows-[repeat(5,150px)]">
+              {animeList.map(
+                (
+                  {
+                    title_english,
+                    title_japanese,
+                    title,
+                    images: {
+                      jpg: { large_image_url },
                     },
-                    index
-                  ) => (
-                    <div className="grid-child" key={index}>
-                      <Card
-                        description={genres.map(({ name }) => (
-                          <span key={name}>{name}</span>
-                        ))}
-                        title={title_english || title || title_japanese}
-                        imgLink={large_image_url}
-                      />
-                    </div>
-                  )
-                )}
-              </div>
-            )}
-          </Wrapper>
-        </div>
-      </ErrorBoundary>
-    );
-  }
-}
+                    genres,
+                  },
+                  index
+                ) => (
+                  <div className="grid-child" key={index}>
+                    <Card
+                      description={genres.map(({ name }) => (
+                        <span key={name}>{name}</span>
+                      ))}
+                      title={title_english || title || title_japanese}
+                      imgLink={large_image_url}
+                    />
+                  </div>
+                )
+              )}
+            </div>
+          )}
+        </Wrapper>
+      </div>
+    </ErrorBoundary>
+  );
+};
+
+export default App;

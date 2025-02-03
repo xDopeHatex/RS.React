@@ -1,8 +1,5 @@
-import { Component } from 'react';
+export const ErrorComponent = () => {
+  throw new Error('Intentional Error');
+};
 
-export default class ErrorComponent extends Component {
-  render() {
-    throw new Error('Intentional Error');
-    return <></>;
-  }
-}
+export default ErrorComponent;
