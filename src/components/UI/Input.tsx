@@ -4,13 +4,16 @@ const Input = ({
   placeholder,
   value,
   onChange,
+  name,
 }: {
   placeholder: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
   value: string;
+  name: string;
 }) => {
   return (
     <input
+      name={name}
       placeholder={placeholder}
       onChange={onChange}
       value={value}

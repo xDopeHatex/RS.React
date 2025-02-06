@@ -7,10 +7,12 @@ const SearchBar = ({
   onSubmit,
   value,
   onChange,
+  name,
 }: {
   onChange: ChangeEventHandler<HTMLInputElement>;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   value: string;
+  name: string;
 }) => {
   return (
     <Wrapper>
@@ -19,6 +21,7 @@ const SearchBar = ({
         onSubmit={onSubmit}
       >
         <Input
+          name={name}
           value={value}
           placeholder={'Type what kind of anime are you looking for?'}
           onChange={onChange}
