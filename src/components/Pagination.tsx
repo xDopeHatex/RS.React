@@ -21,9 +21,8 @@ const Pagination = ({
   const [searchParams, setSearchParams] = useSearchParams();
 
   const perPageOptions = [
-    { name: '10', value: '10' },
-    { name: '5', value: '5' },
-    { name: '15', value: '15' },
+    { name: '4', value: '4' },
+    { name: '6', value: '6' },
   ];
 
   const changePageHandler = async (page: string) => {
@@ -70,133 +69,20 @@ const Pagination = ({
             styles={'p-2 h-12 w-12'}
           />
         </li>
-        <>
-          {Number(pagination.lastPage) === 1 && (
-            <>
-              <PaginationElement isActive={true} name={'1'} />
-            </>
-          )}
-        </>
-        <>
-          {Number(pagination.lastPage) === 2 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 1}
-                name={'1'}
-              />
-            </>
-          )}
-          {Number(pagination.lastPage) === 2 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 2}
-                name={'2'}
-              />
-            </>
-          )}
-        </>
-        <>
-          {Number(pagination.lastPage) === 3 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 1}
-                name={'1'}
-              />
-            </>
-          )}
-          {Number(pagination.lastPage) === 3 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 2}
-                name={'2'}
-              />
-            </>
-          )}
-          {Number(pagination.lastPage) === 3 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 3}
-                name={'3'}
-              />
-            </>
-          )}
-        </>
-        <>
-          {Number(pagination.lastPage) === 4 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 1}
-                name={'1'}
-              />
-            </>
-          )}
-          {Number(pagination.lastPage) === 4 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 2}
-                name={'2'}
-              />
-            </>
-          )}
-          {Number(pagination.lastPage) === 4 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 3}
-                name={'3'}
-              />
-            </>
-          )}
-          {Number(pagination.lastPage) === 4 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 4}
-                name={'4'}
-              />
-            </>
-          )}
-        </>
-        <>
-          {Number(pagination.lastPage) === 5 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 1}
-                name={'1'}
-              />
-            </>
-          )}
-          {Number(pagination.lastPage) === 5 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 2}
-                name={'2'}
-              />
-            </>
-          )}
-          {Number(pagination.lastPage) === 5 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 3}
-                name={'3'}
-              />
-            </>
-          )}
-          {Number(pagination.lastPage) === 5 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 4}
-                name={'4'}
-              />
-            </>
-          )}
-          {Number(pagination.lastPage) === 5 && (
-            <>
-              <PaginationElement
-                isActive={Number(searchParams.get('page')) === 5}
-                name={'5'}
-              />
-            </>
-          )}
-        </>
+        {Number(pagination.lastPage) <= 5 && (
+          <>
+            {new Array(Number(pagination.lastPage)).fill(0).map((_, i) => {
+              const pageNumber = i + 1;
+              return (
+                <PaginationElement
+                  key={pageNumber}
+                  isActive={Number(searchParams.get('page')) === pageNumber}
+                  name={pageNumber.toString()}
+                />
+              );
+            })}
+          </>
+        )}
         <>
           {Number(pagination.lastPage) > 5 && (
             <>

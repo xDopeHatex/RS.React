@@ -19,24 +19,4 @@
 
 
 
-.grid-child:nth-child(5n) {
-    grid-column: span 2;
-    grid-row: span 2;
-}
-
-.grid-child:nth-child(4n) {
-    grid-column: span 1;
-    grid-row: span 2;
-}
-
-.grid-child:nth-child(3n) {
-    grid-column: span 2;
-    grid-row: span 2;
-}
-
-.grid-child:nth-child(6n) {
-    grid-column: span 2;
-    grid-row: span 1;
-}
-
 

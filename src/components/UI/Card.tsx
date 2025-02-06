@@ -10,7 +10,7 @@ const Card = ({
   description: string | ReactNode | ReactNode[];
 }) => {
   return (
-    <figure className="rounded-[10px] flex flex-col h-full shadow-md shadow-black/20 shadow-lg shadow-black/19">
+    <figure className="rounded-[10px] flex flex-col h-full  shadow-lg ">
       <img
         className="rounded-t-[10px] h-full object-cover"
         src={imgLink}

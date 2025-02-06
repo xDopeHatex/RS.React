@@ -10,6 +10,7 @@ import ErrorComponent from '../components/ErrorComponent.tsx';
 import Button from '../components/UI/Button.tsx';
 import Pagination from '../components/Pagination.tsx';
 import { useSearchParams, useLocation } from 'react-router';
+import { twMerge } from 'tailwind-merge';
 
 type AnimeItem = {
   genres: { name: string }[];
@@ -82,9 +83,9 @@ const Layout = () => {
     e.preventDefault();
     localStorage.setItem('animeName', animeName);
     const url = new URLSearchParams(searchParams.toString());
-    setSearchParams(() => ({ q: animeName, limit: '10', page: '1' }));
+    setSearchParams(() => ({ q: animeName, limit: '4', page: '1' }));
     url.set('q', animeName);
-    url.set('limit', '10');
+    url.set('limit', '4');
     url.set('page', '1');
     await fetchAnimeListBySearchParams(url);
   };
@@ -94,9 +95,9 @@ const Layout = () => {
 
     if (!location.search && localStorage.getItem('animeName')) {
       const animeName = localStorage.getItem('animeName') || '';
-      setSearchParams({ q: animeName, limit: '10', page: '1' });
+      setSearchParams({ q: animeName, limit: '4', page: '1' });
       url.set('q', animeName);
-      url.set('limit', '10');
+      url.set('limit', '4');
       url.set('page', '1');
     }
 
@@ -105,7 +106,7 @@ const Layout = () => {
   }, []);
 
   return (
-    <div className="py-[60px] h-screen w-screen">
+    <div className=" h-screen w-screen">
       <Header />
       <SearchBar
         name={'search'}
@@ -125,7 +126,12 @@ const Layout = () => {
             <Spinner />
           </div>
         ) : (
-          <div className="w-full grid gap-16 grid-cols-5 grid-rows-[repeat(5,150px)]">
+          <div
+            className={twMerge(
+              'w-full grid gap-20 grid-cols-3 grid-rows-1',
+              searchParams.get('limit') === '6' ? 'grid-cols-3' : 'grid-cols-2'
+            )}
+          >
             {animeList.map(
               (
                 {
@@ -139,7 +145,7 @@ const Layout = () => {
                 },
                 index
               ) => (
-                <div className="grid-child" key={index}>
+                <div className="max-h-[250px]" key={index}>
                   <Card
                     description={genres.map(({ name }) => (
                       <span key={name}>{name}</span>
@@ -154,18 +160,19 @@ const Layout = () => {
         )}
       </Wrapper>
       <Wrapper>
-        <Pagination
-          fetchPage={fetchAnimeListBySearchParams}
-          pagination={pagination}
-        />
-      </Wrapper>
-      <Wrapper>
-        <Button
-          title={'Error Boundary Test'}
-          onClick={() => setIsShowErrorComponent(true)}
-        />
+        <div className="flex justify-between items-center pt-20">
+          <Button
+            title={'Error Boundary Test'}
+            onClick={() => setIsShowErrorComponent(true)}
+          />
 
-        {isShowErrorComponent && <ErrorComponent />}
+          {isShowErrorComponent && <ErrorComponent />}
+
+          <Pagination
+            fetchPage={fetchAnimeListBySearchParams}
+            pagination={pagination}
+          />
+        </div>
       </Wrapper>
     </div>
   );
