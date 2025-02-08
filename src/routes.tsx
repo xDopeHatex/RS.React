@@ -1,6 +1,6 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter } from 'react-router-dom';
 import Layout from './views/Layout';
-import Home from './views/Home';
+import Details from './views/Details.tsx';
 
 export const router = createBrowserRouter([
   {
@@ -8,8 +8,8 @@ export const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        index: true,
-        element: <Home />,
+        path: 'details',
+        element: <Details />,
       },
     ],
   },

@@ -9,7 +9,7 @@ import { AxiosError } from 'axios';
 import ErrorComponent from '../components/ErrorComponent.tsx';
 import Button from '../components/UI/Button.tsx';
 import Pagination from '../components/Pagination.tsx';
-import { useSearchParams, useLocation } from 'react-router';
+import { useSearchParams, useLocation, Outlet } from 'react-router';
 import { twMerge } from 'tailwind-merge';
 
 type AnimeItem = {
@@ -19,6 +19,7 @@ type AnimeItem = {
   title: string;
   title_japanese: string;
   synopsis: string;
+  mal_id: number;
 };
 
 export interface PaginationProps {
@@ -117,61 +118,69 @@ const Layout = () => {
         onSubmit={getAnimeList}
       />
       <Wrapper>
-        {errorMessage ? (
-          <h2>{errorMessage}</h2>
-        ) : animeList?.length < 1 && !isLoading ? (
-          <h2>Sorry, there is nothing to show. Try again</h2>
-        ) : isLoading ? (
-          <div className="grid place-content-center w-full">
-            <Spinner />
-          </div>
-        ) : (
-          <div
-            className={twMerge(
-              'w-full grid gap-20 grid-cols-3 grid-rows-1',
-              searchParams.get('limit') === '6' ? 'grid-cols-3' : 'grid-cols-2'
+        <div className="flex justify-center">
+          <div>
+            {errorMessage ? (
+              <h2>{errorMessage}</h2>
+            ) : animeList?.length < 1 && !isLoading ? (
+              <h2>Sorry, there is nothing to show. Try again</h2>
+            ) : isLoading ? (
+              <div className="grid place-content-center w-full">
+                <Spinner />
+              </div>
+            ) : (
+              <div
+                className={twMerge(
+                  'w-full grid gap-20 grid-cols-3 grid-rows-1',
+                  searchParams.get('limit') === '6'
+                    ? 'grid-cols-3'
+                    : 'grid-cols-2'
+                )}
+              >
+                {animeList.map(
+                  (
+                    {
+                      title_english,
+                      title_japanese,
+                      title,
+                      images: {
+                        jpg: { large_image_url },
+                      },
+                      genres,
+                      mal_id,
+                    },
+                    index
+                  ) => (
+                    <div className="max-h-[250px]" key={index}>
+                      <Card
+                        id={mal_id}
+                        description={genres.map(({ name }) => (
+                          <span key={name}>{name}</span>
+                        ))}
+                        title={title_english || title || title_japanese}
+                        imgLink={large_image_url}
+                      />
+                    </div>
+                  )
+                )}
+              </div>
             )}
-          >
-            {animeList.map(
-              (
-                {
-                  title_english,
-                  title_japanese,
-                  title,
-                  images: {
-                    jpg: { large_image_url },
-                  },
-                  genres,
-                },
-                index
-              ) => (
-                <div className="max-h-[250px]" key={index}>
-                  <Card
-                    description={genres.map(({ name }) => (
-                      <span key={name}>{name}</span>
-                    ))}
-                    title={title_english || title || title_japanese}
-                    imgLink={large_image_url}
-                  />
-                </div>
-              )
-            )}
+            <div className="flex justify-between items-center pt-20">
+              <Button
+                title={'Error Boundary Test'}
+                onClick={() => setIsShowErrorComponent(true)}
+              />
+
+              {isShowErrorComponent && <ErrorComponent />}
+              {animeList?.length ? (
+                <Pagination
+                  fetchPage={fetchAnimeListBySearchParams}
+                  pagination={pagination}
+                />
+              ) : null}
+            </div>
           </div>
-        )}
-      </Wrapper>
-      <Wrapper>
-        <div className="flex justify-between items-center pt-20">
-          <Button
-            title={'Error Boundary Test'}
-            onClick={() => setIsShowErrorComponent(true)}
-          />
-
-          {isShowErrorComponent && <ErrorComponent />}
-
-          <Pagination
-            fetchPage={fetchAnimeListBySearchParams}
-            pagination={pagination}
-          />
+          <Outlet />
         </div>
       </Wrapper>
     </div>
