@@ -85,7 +85,7 @@ const Details = () => {
   });
 
   return (
-    <>
+    <div data-testid="details" className="w-full h-full">
       {errorMessage && errorMessage}
       {isLoading && !errorMessage && (
         <div className="grid place-content-center w-full">
@@ -119,7 +119,7 @@ const Details = () => {
           />
         </div>
       )}
-    </>
+    </div>
   );
 };
 

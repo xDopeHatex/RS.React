@@ -17,6 +17,7 @@ const SearchBar = ({
   return (
     <Wrapper>
       <form
+        data-testid="search-form"
         className="flex p-5 border-2 border-secondary-color-light rounded-primary-border-radius w-full gap-5 shadow-md shadow-secondary-color-light"
         onSubmit={onSubmit}
       >

@@ -1,6 +1,6 @@
 import Wrapper from './Wrapper.tsx';
 
-const Header = () => {
+const FallbackPage = () => {
   return (
     <Wrapper>
       <h2>Something Wrong Happened ;(</h2>
@@ -8,4 +8,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default FallbackPage;
