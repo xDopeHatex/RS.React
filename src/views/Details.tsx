@@ -66,7 +66,7 @@ const Details = () => {
   const closeHandler = () => {
     const url = new URLSearchParams(searchParams.toString());
     url.delete('id');
-    navigate(`/?${url}`);
+    navigate(`/home/?${url}`);
   };
 
   useEffect(() => {

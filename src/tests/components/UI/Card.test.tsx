@@ -38,6 +38,9 @@ describe('Card Component', () => {
     );
 
     const linkElement = screen.getByRole('link');
-    expect(linkElement).toHaveAttribute('href', `/details/?id=${mockProps.id}`);
+    expect(linkElement).toHaveAttribute(
+      'href',
+      `/home/details/?id=${mockProps.id}`
+    );
   });
 });

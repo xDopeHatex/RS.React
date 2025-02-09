@@ -20,6 +20,7 @@ const Selector = ({
         {selectName}
       </label>
       <select
+        defaultValue={currentValue}
         name={selectName}
         id={selectName}
         onChange={onChange}
@@ -30,7 +31,7 @@ const Selector = ({
       >
         {selectName}
         {options.map(({ name, value }) => (
-          <option key={name} value={value} selected={currentValue === value}>
+          <option key={name} value={value}>
             {name}
           </option>
         ))}

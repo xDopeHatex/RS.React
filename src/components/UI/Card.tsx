@@ -17,7 +17,7 @@ const Card = ({
   url.set('id', id.toString());
 
   return (
-    <Link to={`/details/?${url}`}>
+    <Link to={`/home/details/?${url}`}>
       <figure className="rounded-[10px] flex flex-col h-full  shadow-lg ">
         <img
           className="rounded-t-[10px] h-full object-cover"
