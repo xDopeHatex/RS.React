@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import SearchBar from '../components/SearchBar.tsx';
 import Header from '../components/Header.tsx';
 import Wrapper from '../components/UI/Wrapper.tsx';
@@ -10,6 +10,7 @@ import Pagination from '../components/Pagination.tsx';
 import { useSearchParams, Outlet } from 'react-router';
 import { twMerge } from 'tailwind-merge';
 import useFetchAnime from '../hooks/useFetchAnime.tsx';
+import Notification from '../components/Notification.tsx';
 
 export interface PaginationProps {
   isFirstPage: boolean;
@@ -24,31 +25,28 @@ const Layout = () => {
   const {
     animeList,
     getAnimeList,
-    animeName,
-    setAnimeName,
-    fetchAnimeListBySearchParams,
     pagination,
-    errorMessage,
+    isError,
     isLoading,
+    error,
+    animeNameRef,
   } = useFetchAnime();
 
   return (
-    <div data-testid="layout" className=" h-screen w-screen">
+    <div data-testid="layout" className=" h-screen w-screen relative">
       <Header />
       <SearchBar
+        ref={animeNameRef}
+        placeholder={'Type what kind of anime are you looking for?'}
         name={'search'}
-        value={animeName}
-        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-          setAnimeName(e.target.value)
-        }
         onSubmit={getAnimeList}
       />
       <Wrapper>
         <div className="flex justify-center">
           <div>
-            {errorMessage ? (
-              <h2>{errorMessage}</h2>
-            ) : animeList?.length < 1 && !isLoading ? (
+            {isError ? (
+              <h2>{error?.toString()}</h2>
+            ) : !isLoading && animeList?.length === 0 ? (
               <h2>Sorry, there is nothing to show. Try again</h2>
             ) : isLoading ? (
               <div className="grid place-content-center w-full">
@@ -63,32 +61,23 @@ const Layout = () => {
                     : 'grid-cols-2'
                 )}
               >
-                {animeList.map(
-                  (
-                    {
-                      title_english,
-                      title_japanese,
-                      title,
-                      images: {
-                        jpg: { large_image_url },
-                      },
-                      genres,
-                      mal_id,
-                    },
-                    index
-                  ) => (
-                    <div className="max-h-[250px]" key={index}>
-                      <Card
-                        id={mal_id}
-                        description={genres.map(({ name }) => (
-                          <span key={name}>{name}</span>
-                        ))}
-                        title={title_english || title || title_japanese}
-                        imgLink={large_image_url}
-                      />
-                    </div>
-                  )
-                )}
+                {animeList?.map((anime, index) => (
+                  <div className="max-h-[250px]" key={index}>
+                    <Card
+                      animeFullInfo={anime}
+                      id={anime.mal_id}
+                      description={anime.genres.map(({ name }) => (
+                        <span key={name}>{name}</span>
+                      ))}
+                      title={
+                        anime.title_english ||
+                        anime.title ||
+                        anime.title_japanese
+                      }
+                      imgLink={anime.images.jpg.large_image_url}
+                    />
+                  </div>
+                ))}
               </div>
             )}
             <div className="flex justify-between items-center pt-20">
@@ -97,17 +86,15 @@ const Layout = () => {
                 onClick={() => setIsShowErrorComponent(true)}
               />
               {isShowErrorComponent && <ErrorComponent />}
-              {animeList?.length ? (
-                <Pagination
-                  fetchPage={fetchAnimeListBySearchParams}
-                  pagination={pagination}
-                />
+              {animeList?.length && pagination ? (
+                <Pagination pagination={pagination} />
               ) : null}
             </div>
           </div>
           <Outlet />
         </div>
       </Wrapper>
+      <Notification />
     </div>
   );
 };

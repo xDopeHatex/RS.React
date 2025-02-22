@@ -10,13 +10,7 @@ import { ChangeEvent } from 'react';
 import PaginationElement from './UI/PaginationElement.tsx';
 import { PaginationProps } from '../views/Layout.tsx';
 
-const Pagination = ({
-  pagination,
-  fetchPage,
-}: {
-  fetchPage: (url: URLSearchParams) => void;
-  pagination: PaginationProps;
-}) => {
+const Pagination = ({ pagination }: { pagination: PaginationProps }) => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -29,7 +23,6 @@ const Pagination = ({
     const urlSearchParams = new URLSearchParams(location.search);
     urlSearchParams.set('page', page);
     setSearchParams(urlSearchParams);
-    await fetchPage(urlSearchParams);
   };
 
   const changePerPageHandler = async (perPage: string) => {
@@ -37,7 +30,6 @@ const Pagination = ({
     urlSearchParams.set('limit', perPage);
     urlSearchParams.set('page', '1');
     setSearchParams(urlSearchParams);
-    await fetchPage(urlSearchParams);
   };
 
   const prevPageHandler = async () => {

@@ -1,67 +1,19 @@
 import { useSearchParams, useNavigate } from 'react-router';
-import { useEffect, useRef, useState } from 'react';
-import { getAnimeById } from '../services/api.ts';
-import { AxiosError } from 'axios';
+import { useEffect, useRef } from 'react';
 import Spinner from '../components/UI/Spinner.tsx';
 import Button from '../components/UI/Button.tsx';
-
-interface DetailsData {
-  title: string;
-  title_english: string;
-  episodes: number;
-  status: string;
-  aired: {
-    prop: {
-      from: {
-        day: number;
-        month: number;
-        year: number;
-      };
-      to: {
-        day: number;
-        month: number;
-        year: number;
-      };
-    };
-  };
-  score: number;
-  synopsis: string;
-  images: { jpg: { large_image_url: string } };
-}
+import { useGetAnimeByIdQuery } from '../services/apiSlices.ts';
+import AnimeCardCheckbox from '../components/AnimeCardCheckbox.tsx';
 
 const Details = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
   const sideBarRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
-  const [detailsData, setDetailsData] = useState<DetailsData>();
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        if (id) {
-          const {
-            data: { data },
-          }: { data: { data: DetailsData } } = await getAnimeById(id);
-          console.log('DATA!>>', data);
-          setDetailsData(data);
-        }
-      } catch (error: unknown) {
-        if (error instanceof AxiosError) {
-          setErrorMessage(error.message);
-        } else {
-          setErrorMessage('An unknown error occurred');
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [id]);
+  const { data, isLoading, isError, error } = useGetAnimeByIdQuery({
+    id: Number(id),
+  });
 
   const closeHandler = () => {
     const url = new URLSearchParams(searchParams.toString());
@@ -86,30 +38,31 @@ const Details = () => {
 
   return (
     <div data-testid="details" className="w-full h-full">
-      {errorMessage && errorMessage}
-      {isLoading && !errorMessage && (
+      {isError && error?.toString()}
+      {isLoading && !isError && (
         <div className="grid place-content-center w-full">
           <Spinner />
         </div>
       )}
-      {!isLoading && detailsData && !errorMessage && (
+      {!isLoading && data && !isError && (
         <div ref={sideBarRef} className="h-[40rem] p-4 w-full relative">
+          <AnimeCardCheckbox animeFullInfo={data?.data} position="bottom" />
           <img
             className="rounded-[10px] h-full object-cover absolute w-full"
-            src={detailsData?.images?.jpg?.large_image_url}
-            alt={`image of the ${detailsData.title} anime`}
+            src={data?.data?.images?.jpg?.large_image_url}
+            alt={`image of the ${data?.data?.title} anime`}
           />
           <div className="absolute rounded-t-[10px] z-10 w-full flex flex-col gap-4 bg-black">
-            <p className="text-white">Title - {detailsData.title}</p>
-            <p className="text-white"> Score - {detailsData.score}</p>
-            <p className="text-white"> Status - {detailsData.status}</p>
+            <p className="text-white">Title - {data?.data?.title}</p>
+            <p className="text-white"> Score - {data?.data?.score}</p>
+            <p className="text-white"> Status - {data?.data?.status}</p>
             <p className="text-white">
               {' '}
-              Aired from {detailsData.aired.prop.from.year}.
-              {detailsData.aired.prop.from.month}.
-              {detailsData.aired.prop.from.day} to{' '}
-              {detailsData.aired.prop.to.year}.{detailsData.aired.prop.to.month}
-              .{detailsData.aired.prop.to.day}{' '}
+              Aired from {data?.data?.aired.prop.from.year}.
+              {data?.data?.aired.prop.from.month}.
+              {data?.data?.aired.prop.from.day} to{' '}
+              {data?.data?.aired.prop.to.year}.{data?.data?.aired.prop.to.month}
+              .{data?.data?.aired.prop.to.day}{' '}
             </p>
           </div>
           <Button

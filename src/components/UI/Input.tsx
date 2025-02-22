@@ -1,18 +1,21 @@
-import { ChangeEventHandler } from 'react';
+import { ChangeEventHandler, MutableRefObject } from 'react';
 
 const Input = ({
   placeholder,
   value,
   onChange,
   name,
+  ref,
 }: {
   placeholder: string;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-  value: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  value?: string;
   name: string;
+  ref?: MutableRefObject<null | HTMLInputElement>;
 }) => {
   return (
     <input
+      ref={ref}
       name={name}
       placeholder={placeholder}
       onChange={onChange}

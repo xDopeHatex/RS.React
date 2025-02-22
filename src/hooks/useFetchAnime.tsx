@@ -1,73 +1,37 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router';
-import { getAnimeTitles } from '../services/api.ts';
-import { AxiosError } from 'axios';
-import { PaginationProps } from '../views/Layout.tsx';
-
-type AnimeItem = {
-  genres: { name: string }[];
-  images: { jpg: { large_image_url: string } };
-  title_english: string;
-  title: string;
-  title_japanese: string;
-  synopsis: string;
-  mal_id: number;
-};
+import { useGetAnimeListQuery } from '../services/apiSlices.ts';
 
 const useFetchAnime = () => {
-  const [animeName, setAnimeName] = useState(
-    localStorage.getItem('animeName') || ''
-  );
-  const [animeList, setAnimeList] = useState<AnimeItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const animeNameRef = useRef<HTMLInputElement | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [pagination, setPagination] = useState<PaginationProps>({
-    isFirstPage: false,
-    isLastPage: false,
-    lastPage: null,
-  });
 
-  const fetchAnimeListBySearchParams = async (
-    searchParamsProps: URLSearchParams
-  ) => {
-    setIsLoading(true);
-    try {
-      const {
-        data,
-      }: {
-        data: {
-          pagination: {
-            current_page: number;
-            has_next_page: boolean;
-            last_visible_page: number;
-          };
-          data: AnimeItem[];
-        };
-      } = await getAnimeTitles(searchParamsProps);
-      setPagination({
-        isFirstPage: data.pagination.current_page == 1,
-        isLastPage: !data.pagination.has_next_page,
-        lastPage: data.pagination.last_visible_page,
-      });
-
-      setAnimeList(data.data);
-    } catch (error: unknown) {
-      if (error instanceof AxiosError) {
-        setErrorMessage(error.message);
-      } else {
-        setErrorMessage('An unknown error occurred');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data, isLoading, isError, error } = useGetAnimeListQuery(
+    {
+      q: searchParams.get('q') || localStorage.getItem('animeName') || '',
+      page: Number(searchParams.get('page')),
+      limit: Number(searchParams.get('limit')),
+    },
+    { refetchOnMountOrArgChange: true }
+  );
 
   useEffect(() => {
     const url = new URLSearchParams(searchParams.toString());
 
-    if (!location.search && localStorage.getItem('animeName')) {
+    if (location.search) {
+      const animeName = searchParams.get('q') || '';
+      if (animeNameRef.current !== null && animeNameRef.current.value === '') {
+        console.log('fire');
+        animeNameRef.current.value = animeName;
+      }
+    } else if (!location.search && localStorage.getItem('animeName')) {
+      console.log('heeey');
       const animeName = localStorage.getItem('animeName') || '';
+
+      if (animeNameRef.current !== null) {
+        animeNameRef.current.value = animeName;
+      }
+
       setSearchParams({ q: animeName, limit: '4', page: '1' });
       url.set('q', animeName);
       url.set('limit', '4');
@@ -78,32 +42,34 @@ const useFetchAnime = () => {
       url.set('limit', '4');
       url.set('page', '1');
     }
-
-    const fetchData = async () => await fetchAnimeListBySearchParams(url);
-    fetchData();
   }, []);
 
   const getAnimeList = async (e: FormEvent<HTMLFormElement>) => {
-    setErrorMessage('');
     e.preventDefault();
-    localStorage.setItem('animeName', animeName);
-    const url = new URLSearchParams(searchParams.toString());
-    setSearchParams(() => ({ q: animeName, limit: '4', page: '1' }));
-    url.set('q', animeName);
-    url.set('limit', '4');
-    url.set('page', '1');
-    await fetchAnimeListBySearchParams(url);
+    const form = e.currentTarget;
+    const inputElement = form.elements[0] as HTMLInputElement;
+    localStorage.setItem('animeName', inputElement.value);
+    setSearchParams(() => ({
+      q: inputElement.value,
+      limit: '4',
+      page: '1',
+    }));
   };
 
   return {
+    animeNameRef,
     getAnimeList,
-    animeList,
-    animeName,
-    setAnimeName,
-    fetchAnimeListBySearchParams,
+    animeList: data?.data,
     isLoading,
-    errorMessage,
-    pagination,
+    isError,
+    error,
+    pagination: data
+      ? {
+          isFirstPage: data.pagination.current_page == 1,
+          isLastPage: !data.pagination.has_next_page,
+          lastPage: data.pagination.last_visible_page,
+        }
+      : null,
   };
 };
 

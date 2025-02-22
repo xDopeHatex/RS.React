@@ -1,4 +1,4 @@
-import { ChangeEventHandler, FormEvent } from 'react';
+import { ChangeEventHandler, FormEvent, MutableRefObject } from 'react';
 import Input from './UI/Input.tsx';
 import Button from './UI/Button.tsx';
 import Wrapper from './UI/Wrapper.tsx';
@@ -8,11 +8,15 @@ const SearchBar = ({
   value,
   onChange,
   name,
+  placeholder,
+  ref,
 }: {
-  onChange: ChangeEventHandler<HTMLInputElement>;
-  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
-  value: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onSubmit?: (e: FormEvent<HTMLFormElement>) => void;
+  value?: string;
   name: string;
+  placeholder: string;
+  ref?: MutableRefObject<null | HTMLInputElement>;
 }) => {
   return (
     <Wrapper>
@@ -22,9 +26,10 @@ const SearchBar = ({
         onSubmit={onSubmit}
       >
         <Input
+          ref={ref}
           name={name}
           value={value}
-          placeholder={'Type what kind of anime are you looking for?'}
+          placeholder={placeholder}
           onChange={onChange}
         />
         <Button title="Search" type="submit" />
