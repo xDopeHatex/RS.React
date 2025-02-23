@@ -4,12 +4,15 @@ import Spinner from '../components/UI/Spinner.tsx';
 import Button from '../components/UI/Button.tsx';
 import { useGetAnimeByIdQuery } from '../services/apiSlices.ts';
 import AnimeCardCheckbox from '../components/AnimeCardCheckbox.tsx';
+import { useTheme } from '../providers/ThemeProvider.tsx';
+import { twMerge } from 'tailwind-merge';
 
 const Details = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
   const sideBarRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const { data, isLoading, isError, error } = useGetAnimeByIdQuery({
     id: Number(id),
@@ -52,11 +55,43 @@ const Details = () => {
             src={data?.data?.images?.jpg?.large_image_url}
             alt={`image of the ${data?.data?.title} anime`}
           />
-          <div className="absolute rounded-t-[10px] z-10 w-full flex flex-col gap-4 bg-black">
-            <p className="text-white">Title - {data?.data?.title}</p>
-            <p className="text-white"> Score - {data?.data?.score}</p>
-            <p className="text-white"> Status - {data?.data?.status}</p>
-            <p className="text-white">
+          <div
+            className={twMerge(
+              'absolute rounded-t-[10px] z-10 w-full flex flex-col gap-4',
+              theme === 'dark' && 'bg-white',
+              theme === 'light' && 'bg-black'
+            )}
+          >
+            <p
+              className={twMerge(
+                theme === 'dark' && 'text-black',
+                theme === 'light' && 'text-white'
+              )}
+            >
+              Title - {data?.data?.title}
+            </p>
+            <p
+              className={twMerge(
+                theme === 'dark' && 'text-black',
+                theme === 'light' && 'text-white'
+              )}
+            >
+              Score - {data?.data?.score}
+            </p>
+            <p
+              className={twMerge(
+                theme === 'dark' && 'text-black',
+                theme === 'light' && 'text-white'
+              )}
+            >
+              Status - {data?.data?.status}
+            </p>
+            <p
+              className={twMerge(
+                theme === 'dark' && 'text-black',
+                theme === 'light' && 'text-white'
+              )}
+            >
               {' '}
               Aired from {data?.data?.aired.prop.from.year}.
               {data?.data?.aired.prop.from.month}.

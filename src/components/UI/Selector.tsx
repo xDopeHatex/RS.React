@@ -1,5 +1,6 @@
 import { ChangeEvent } from 'react';
 import { twMerge } from 'tailwind-merge';
+import { useTheme } from '../../providers/ThemeProvider.tsx';
 
 const Selector = ({
   options,
@@ -14,9 +15,18 @@ const Selector = ({
   styles?: string;
   currentValue: string;
 }) => {
+  const theme = useTheme();
+
   return (
     <div className="flex  items-center gap-4">
-      <label title={selectName} htmlFor={selectName} className="text-black">
+      <label
+        title={selectName}
+        htmlFor={selectName}
+        className={twMerge(
+          theme === 'light' && 'text-black',
+          theme === 'dark' && 'text-white'
+        )}
+      >
         {selectName}
       </label>
       <select

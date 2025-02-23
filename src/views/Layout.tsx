@@ -11,6 +11,7 @@ import { useSearchParams, Outlet } from 'react-router';
 import { twMerge } from 'tailwind-merge';
 import useFetchAnime from '../hooks/useFetchAnime.tsx';
 import Notification from '../components/Notification.tsx';
+import { useTheme } from '../providers/ThemeProvider.tsx';
 
 export interface PaginationProps {
   isFirstPage: boolean;
@@ -21,6 +22,7 @@ export interface PaginationProps {
 const Layout = () => {
   const [isShowErrorComponent, setIsShowErrorComponent] = useState(false);
   const [searchParams] = useSearchParams();
+  const theme = useTheme();
 
   const {
     animeList,
@@ -33,7 +35,13 @@ const Layout = () => {
   } = useFetchAnime();
 
   return (
-    <div data-testid="layout" className=" h-screen w-screen relative">
+    <div
+      data-testid="layout"
+      className={twMerge(
+        'h-screen w-screen relative',
+        theme === 'dark' && 'bg-black'
+      )}
+    >
       <Header />
       <SearchBar
         ref={animeNameRef}

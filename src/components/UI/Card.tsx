@@ -2,6 +2,8 @@ import { ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { AnimeItem } from '../../services/apiSlices.types.ts';
 import AnimeCardCheckbox from '../AnimeCardCheckbox.tsx';
+import { useTheme } from '../../providers/ThemeProvider.tsx';
+import { twMerge } from 'tailwind-merge';
 
 const Card = ({
   title,
@@ -16,6 +18,7 @@ const Card = ({
   id: number;
   animeFullInfo: AnimeItem;
 }) => {
+  const theme = useTheme();
   const [searchParams] = useSearchParams();
   const url = new URLSearchParams(searchParams.toString());
   url.set('id', id.toString());
@@ -29,7 +32,13 @@ const Card = ({
           alt={`image of the ${title} anime`}
         />
         <AnimeCardCheckbox animeFullInfo={animeFullInfo} position="top" />
-        <figcaption className="flex flex-col gap-2 bg-[#222] text-white italic text-sm sans-serif p-1 text-center rounded-b-[10px]">
+        <figcaption
+          className={twMerge(
+            'flex flex-col gap-2  italic text-sm sans-serif p-1 text-center rounded-b-[10px]',
+            theme === 'light' && 'bg-dark-gray-light-theme text-white ',
+            theme === 'dark' && 'bg-dark-gray-dark-theme text-black '
+          )}
+        >
           <p>{title}</p>
           <p className="flex justify-center gap-2">{description}</p>
         </figcaption>

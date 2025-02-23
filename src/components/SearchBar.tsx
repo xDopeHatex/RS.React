@@ -2,6 +2,8 @@ import { ChangeEventHandler, FormEvent, MutableRefObject } from 'react';
 import Input from './UI/Input.tsx';
 import Button from './UI/Button.tsx';
 import Wrapper from './UI/Wrapper.tsx';
+import { useTheme } from '../providers/ThemeProvider.tsx';
+import { twMerge } from 'tailwind-merge';
 
 const SearchBar = ({
   onSubmit,
@@ -18,11 +20,16 @@ const SearchBar = ({
   placeholder: string;
   ref?: MutableRefObject<null | HTMLInputElement>;
 }) => {
+  const theme = useTheme();
   return (
     <Wrapper>
       <form
         data-testid="search-form"
-        className="flex p-5 border-2 border-secondary-color-light rounded-primary-border-radius w-full gap-5 shadow-md shadow-secondary-color-light"
+        className={twMerge(
+          'flex p-5 border-2  rounded-primary-border-radius w-full gap-5 shadow-md shadow-secondary-color-light',
+          theme === 'dark' && 'border-secondary-color-light-dark-theme',
+          theme === 'light' && 'border-secondary-color-light-light-theme'
+        )}
         onSubmit={onSubmit}
       >
         <Input

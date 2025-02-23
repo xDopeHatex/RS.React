@@ -1,4 +1,6 @@
 import { ChangeEventHandler, MutableRefObject } from 'react';
+import { useTheme } from '../../providers/ThemeProvider.tsx';
+import { twMerge } from 'tailwind-merge';
 
 const Input = ({
   placeholder,
@@ -13,6 +15,8 @@ const Input = ({
   name: string;
   ref?: MutableRefObject<null | HTMLInputElement>;
 }) => {
+  const theme = useTheme();
+
   return (
     <input
       ref={ref}
@@ -20,7 +24,13 @@ const Input = ({
       placeholder={placeholder}
       onChange={onChange}
       value={value}
-      className="w-full min-w-[150px] rounded-primary-border-radius bg-secondary-color-lighter text-primary-color px-5 py-2 placeholder-light-gray focus:outline-none focus:bg-secondary-color-light"
+      className={twMerge(
+        'w-full min-w-[150px] rounded-primary-border-radius  px-5 py-2 focus:outline-none ',
+        theme === 'light' &&
+          'bg-secondary-color-lighter-light-theme text-primary-color placeholder-light-gray-light-theme focus:bg-secondary-color-light-light-theme',
+        theme === 'dark' &&
+          'bg-secondary-color-lighter-dark-theme text-secondary-color placeholder-light-gray-dark-theme focus:bg-secondary-color-light-dark-theme'
+      )}
     />
   );
 };

@@ -3,8 +3,11 @@ import { ApplicationState } from '../store/store.ts';
 import Button from './UI/Button.tsx';
 import { removeAllAnime } from '../store/slices/selectedAnimeSlice.ts';
 import { AnimeItem } from '../services/apiSlices.types.ts';
+import { useTheme } from '../providers/ThemeProvider.tsx';
+import { twMerge } from 'tailwind-merge';
 
 const Notification = () => {
+  const theme = useTheme();
   const { selectedAnimeList } = useSelector(
     (state: ApplicationState) => state.selectedAnime
   );
@@ -41,8 +44,22 @@ const Notification = () => {
   return (
     <>
       {Boolean(selectedAnimeList?.length) && (
-        <div className="absolute bottom-0 px-10 py-5 rounded-primary-border-radius bg-secondary-color-lighter right-0 border-4 border-secondary-color-light flex items-center justify-center gap-5">
-          <h4 className="text-xl">
+        <div
+          className={twMerge(
+            'absolute bottom-0 px-10 py-5 rounded-primary-border-radius  right-0 border-4  flex items-center justify-center gap-5',
+            theme === 'dark' &&
+              'bg-secondary-color-lighter-dark-theme border-secondary-color-light-dark-theme',
+            theme === 'light' &&
+              'bg-secondary-color-lighter-light-theme border-secondary-color-light-light-theme'
+          )}
+        >
+          <h4
+            className={twMerge(
+              'text-xl',
+              theme === 'light' && 'text-black',
+              theme === 'dark' && 'text-white'
+            )}
+          >
             You have selected {selectedAnimeList?.length} anime
           </h4>
           <Button title="Unselect all" onClick={handleUnselectAll} />
