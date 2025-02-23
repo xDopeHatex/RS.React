@@ -5,12 +5,26 @@ import { describe, test, expect } from 'vitest';
 import ThemeProvider from '../../../providers/ThemeProvider.tsx';
 import { Provider } from 'react-redux';
 import store from '../../../store/store.ts';
+import { AnimeItem } from '../../../services/apiSlices.types.ts';
 
-const dummyAnimeFullInfo = {
-  id: 123,
+export const dummyAnimeFullInfo: AnimeItem = {
+  genres: [{ name: 'Action' }, { name: 'Adventure' }, { name: 'Fantasy' }],
+  title_english: 'Naruto',
   title: 'Naruto',
-  imgLink: 'https://example.com/naruto.jpg',
-  description: 'A popular anime about a ninja',
+  title_japanese: 'ナルト',
+  mal_id: 20,
+  episodes: 220,
+  status: 'Finished Airing',
+  aired: {
+    prop: {
+      from: { day: 3, month: 10, year: 2002 },
+      to: { day: 8, month: 2, year: 2007 },
+    },
+  },
+  score: 7.9,
+  synopsis:
+    'Naruto follows the story of Naruto Uzumaki, a young ninja with dreams of becoming the strongest and earning the respect of his peers.',
+  images: { jpg: { large_image_url: 'https://example.com/naruto.jpg' } },
 };
 
 describe('Card Component', () => {
