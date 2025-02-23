@@ -11,13 +11,7 @@ const Header = () => {
       <header className="flex text-secondary-color text-2xl items-center justify-between">
         <h1>Find Anime that you have always dreamt of!</h1>
         <Button
-          title={
-            theme === 'dark'
-              ? 'light theme'
-              : theme === 'light'
-                ? 'dark theme'
-                : 'some theme'
-          }
+          title={theme === 'dark' ? 'light theme' : 'dark theme'}
           onClick={changeTheme}
         />
       </header>
