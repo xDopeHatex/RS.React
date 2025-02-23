@@ -1,15 +1,20 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Pagination from '../../components/Pagination.tsx';
-import { vi, describe, beforeEach, it, expect } from 'vitest';
+import { describe, beforeEach, it, expect } from 'vitest';
 import { PaginationProps } from '../../views/Layout.tsx';
-
-const mockFetchPage = vi.fn();
+import { Provider } from 'react-redux';
+import store from '../../store/store.ts';
+import ThemeProvider from '../../providers/ThemeProvider.tsx';
 
 const renderPagination = (paginationProps: PaginationProps) => {
   render(
-    <MemoryRouter initialEntries={['/?q=nar&page=1&limit=4']}>
-      <Pagination pagination={paginationProps} fetchPage={mockFetchPage} />
+    <MemoryRouter>
+      <Provider store={store}>
+        <ThemeProvider>
+          <Pagination pagination={paginationProps} />
+        </ThemeProvider>
+      </Provider>
     </MemoryRouter>
   );
 };
@@ -29,13 +34,5 @@ describe('Pagination Component', () => {
     renderPagination(paginationProps);
     expect(screen.getByLabelText('Items Per Page')).toBeInTheDocument();
     expect(screen.getByText('1')).toBeInTheDocument();
-  });
-
-  it('calls fetchPage when changing items per page', async () => {
-    renderPagination(paginationProps);
-    fireEvent.change(screen.getByLabelText('Items Per Page'), {
-      target: { value: '6' },
-    });
-    expect(mockFetchPage).toHaveBeenCalled();
   });
 });

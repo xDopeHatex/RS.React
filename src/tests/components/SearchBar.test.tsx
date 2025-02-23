@@ -1,18 +1,22 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, describe, it, expect } from 'vitest';
-import SearchBar from '../../components/SearchBar.tsx';
+import SearchBar from '../../components/SearchBar';
+
+const placeholderText = 'Type what kind of anime are you looking for?';
 
 describe('SearchBar Component', () => {
   it('renders input and button correctly', () => {
     render(
-      <SearchBar onSubmit={vi.fn()} onChange={vi.fn()} value="" name="search" />
+      <SearchBar
+        onSubmit={vi.fn()}
+        onChange={vi.fn()}
+        value=""
+        name="search"
+        placeholder={placeholderText}
+      />
     );
 
-    expect(
-      screen.getByPlaceholderText(
-        'Type what kind of anime are you looking for?'
-      )
-    ).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(placeholderText)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /search/i })).toBeInTheDocument();
   });
 
@@ -25,12 +29,11 @@ describe('SearchBar Component', () => {
         onChange={handleChange}
         value=""
         name="search"
+        placeholder={placeholderText}
       />
     );
 
-    const input = screen.getByPlaceholderText(
-      'Type what kind of anime are you looking for?'
-    );
+    const input = screen.getByPlaceholderText(placeholderText);
     fireEvent.change(input, { target: { value: 'Naruto' } });
 
     expect(handleChange).toHaveBeenCalledTimes(1);
@@ -45,6 +48,7 @@ describe('SearchBar Component', () => {
         onChange={vi.fn()}
         value=""
         name="search"
+        placeholder={placeholderText}
       />
     );
 

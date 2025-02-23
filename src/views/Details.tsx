@@ -1,10 +1,10 @@
-import { useSearchParams, useNavigate } from 'react-router';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import Spinner from '../components/UI/Spinner.tsx';
 import Button from '../components/UI/Button.tsx';
 import { useGetAnimeByIdQuery } from '../services/apiSlices.ts';
 import AnimeCardCheckbox from '../components/AnimeCardCheckbox.tsx';
-import { useTheme } from '../providers/ThemeProvider.tsx';
+import useTheme from '../hooks/useTheme.tsx';
 import { twMerge } from 'tailwind-merge';
 
 const Details = () => {

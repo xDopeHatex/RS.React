@@ -7,11 +7,11 @@ import Spinner from '../components/UI/Spinner.tsx';
 import ErrorComponent from '../components/ErrorComponent.tsx';
 import Button from '../components/UI/Button.tsx';
 import Pagination from '../components/Pagination.tsx';
-import { useSearchParams, Outlet } from 'react-router';
+import { useSearchParams, Outlet } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import useFetchAnime from '../hooks/useFetchAnime.tsx';
 import Notification from '../components/Notification.tsx';
-import { useTheme } from '../providers/ThemeProvider.tsx';
+import useTheme from '../hooks/useTheme.tsx';
 
 export interface PaginationProps {
   isFirstPage: boolean;

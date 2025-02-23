@@ -1,11 +1,15 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useState } from 'react';
 
-type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark';
+export const ThemeContext = createContext<Theme>('dark');
 
-const ThemeContext = createContext<Theme>('dark');
-const ThemeUpdateContext = createContext(() => {});
+export const ThemeUpdateContext = createContext(() => {});
 
-const ThemeProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
+export const ThemeProvider = ({
+  children,
+}: {
+  children: ReactNode | ReactNode[];
+}) => {
   const [theme, setTheme] = useState<Theme>('dark');
 
   const changeThemeHandler = () => {
@@ -19,8 +23,5 @@ const ThemeProvider = ({ children }: { children: ReactNode | ReactNode[] }) => {
     </ThemeUpdateContext.Provider>
   );
 };
-
-export const useTheme = () => useContext(ThemeContext);
-export const useUpdateTheme = () => useContext(ThemeUpdateContext);
 
 export default ThemeProvider;

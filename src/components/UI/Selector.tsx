@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { useTheme } from '../../providers/ThemeProvider.tsx';
+import useTheme from '../../hooks/useTheme.tsx';
 
 const Selector = ({
   options,
@@ -30,6 +30,7 @@ const Selector = ({
         {selectName}
       </label>
       <select
+        data-testid="select"
         defaultValue={currentValue}
         name={selectName}
         id={selectName}

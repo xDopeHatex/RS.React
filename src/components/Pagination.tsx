@@ -4,7 +4,7 @@ import {
 } from '@heroicons/react/24/solid';
 
 import Button from './UI/Button';
-import { useLocation, useSearchParams } from 'react-router';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import Selector from './UI/Selector.tsx';
 import { ChangeEvent } from 'react';
 import PaginationElement from './UI/PaginationElement.tsx';

@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 import { useGetAnimeListQuery } from '../services/apiSlices.ts';
 
 const useFetchAnime = () => {

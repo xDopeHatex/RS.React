@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
-import { Link, useSearchParams } from 'react-router';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AnimeItem } from '../../services/apiSlices.types.ts';
 import AnimeCardCheckbox from '../AnimeCardCheckbox.tsx';
-import { useTheme } from '../../providers/ThemeProvider.tsx';
+import useTheme from '../../hooks/useTheme.tsx';
 import { twMerge } from 'tailwind-merge';
 
 const Card = ({

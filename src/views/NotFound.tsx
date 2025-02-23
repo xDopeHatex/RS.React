@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
-import { useTheme } from '../providers/ThemeProvider.tsx';
+import useTheme from '../hooks/useTheme.tsx';
 
 export default function NotFound() {
   const theme = useTheme();

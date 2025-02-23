@@ -2,7 +2,7 @@ import { ChangeEventHandler, FormEvent, MutableRefObject } from 'react';
 import Input from './UI/Input.tsx';
 import Button from './UI/Button.tsx';
 import Wrapper from './UI/Wrapper.tsx';
-import { useTheme } from '../providers/ThemeProvider.tsx';
+import useTheme from '../hooks/useTheme.tsx';
 import { twMerge } from 'tailwind-merge';
 
 const SearchBar = ({

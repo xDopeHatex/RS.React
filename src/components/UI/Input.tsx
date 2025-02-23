@@ -1,5 +1,5 @@
 import { ChangeEventHandler, MutableRefObject } from 'react';
-import { useTheme } from '../../providers/ThemeProvider.tsx';
+import useTheme from '../../hooks/useTheme.tsx';
 import { twMerge } from 'tailwind-merge';
 
 const Input = ({

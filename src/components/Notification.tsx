@@ -3,7 +3,7 @@ import { ApplicationState } from '../store/store.ts';
 import Button from './UI/Button.tsx';
 import { removeAllAnime } from '../store/slices/selectedAnimeSlice.ts';
 import { AnimeItem } from '../services/apiSlices.types.ts';
-import { useTheme } from '../providers/ThemeProvider.tsx';
+import useTheme from '../hooks/useTheme.tsx';
 import { twMerge } from 'tailwind-merge';
 
 const Notification = () => {
@@ -46,7 +46,7 @@ const Notification = () => {
       {Boolean(selectedAnimeList?.length) && (
         <div
           className={twMerge(
-            'absolute bottom-0 px-10 py-5 rounded-primary-border-radius  right-0 border-4  flex items-center justify-center gap-5',
+            'absolute bottom-10 px-2 py-5 rounded-primary-border-radius  right-0 border-4  flex flex-col items-center justify-center gap-5',
             theme === 'dark' &&
               'bg-secondary-color-lighter-dark-theme border-secondary-color-light-dark-theme',
             theme === 'light' &&
