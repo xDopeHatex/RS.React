@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-primary-color: #005e83;
+  --color-secondary-color: #00c898;
+
+
+  --color-secondary-color-light-light-theme: #e6fcf6;
+  --color-secondary-color-lighter-light-theme: #eff6f8;
+  --color-light-gray-light-theme: #d8d8d8;
+  --color-dark-gray-light-theme: #444444;
+
+
+
+  --color-secondary-color-light-dark-theme: #004d40;
+  --color-secondary-color-lighter-dark-theme: #003b33;
+  --color-light-gray-dark-theme: #444444;
+  --color-dark-gray-dark-theme: #d8d8d8;
+
+
+  --color-black: #000000;
+  --color-white: #ffffff;
+  --radius-primary-border-radius: 40px;
+  --transition-transition-duration: 0.2s;
+}
