@@ -4,47 +4,34 @@ import {
 } from '@heroicons/react/24/solid';
 
 import Button from './UI/Button';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import Selector from './UI/Selector.tsx';
 import { ChangeEvent } from 'react';
 import PaginationElement from './UI/PaginationElement.tsx';
 import { PaginationProps } from '../views/Layout.tsx';
+import usePaginationHandlers from '../hooks/usePaginationHandlers.tsx';
 
 const Pagination = ({ pagination }: { pagination: PaginationProps }) => {
-  const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+
+  const {
+    prevPageHandler,
+    changePerPageHandler,
+    nextPageHandler,
+    changePageHandler,
+  } = usePaginationHandlers();
 
   const perPageOptions = [
     { name: '4', value: '4' },
     { name: '6', value: '6' },
   ];
 
-  const changePageHandler = async (page: string) => {
-    const urlSearchParams = new URLSearchParams(location.search);
-    urlSearchParams.set('page', page);
-    setSearchParams(urlSearchParams);
-  };
-
-  const changePerPageHandler = async (perPage: string) => {
-    const urlSearchParams = new URLSearchParams(location.search);
-    urlSearchParams.set('limit', perPage);
-    urlSearchParams.set('page', '1');
-    setSearchParams(urlSearchParams);
-  };
-
-  const prevPageHandler = async () => {
-    const prevPage = (Number(searchParams.get('page')) - 1).toString();
-    await changePageHandler(prevPage);
-  };
-
-  const nextPageHandler = async () => {
-    const nextPage = (Number(searchParams.get('page')) + 1).toString();
-    await changePageHandler(nextPage);
-  };
-
   return (
     <>
-      <ul className="flex flex-wrap items-center justify-end gap-6">
+      <ul
+        className="flex flex-wrap items-center justify-end gap-6"
+        data-testid="pagination"
+      >
         <Selector
           currentValue={searchParams.get('limit') || ''}
           options={perPageOptions}
@@ -55,6 +42,7 @@ const Pagination = ({ pagination }: { pagination: PaginationProps }) => {
         />
         <li>
           <Button
+            testId="prevButton"
             isDisabled={pagination.isFirstPage}
             icon={<ArrowLongLeftIcon />}
             onClick={prevPageHandler}
@@ -132,6 +120,7 @@ const Pagination = ({ pagination }: { pagination: PaginationProps }) => {
         </>
         <li>
           <Button
+            testId="nextButton"
             isDisabled={pagination.isLastPage}
             icon={<ArrowLongRightIcon />}
             onClick={nextPageHandler}

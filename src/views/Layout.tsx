@@ -90,6 +90,7 @@ const Layout = () => {
             )}
             <div className="flex justify-between items-center pt-20">
               <Button
+                testId="errorButton"
                 title={'Error Boundary Test'}
                 onClick={() => setIsShowErrorComponent(true)}
               />

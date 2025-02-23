@@ -9,6 +9,7 @@ const Button = ({
   styles,
   isDisabled,
   isActive,
+  testId,
 }: {
   title?: string | ReactNode;
   onClick?: () => void;
@@ -17,9 +18,11 @@ const Button = ({
   styles?: string;
   isDisabled?: boolean;
   isActive?: boolean;
+  testId?: string;
 }) => {
   return (
     <button
+      data-testid={testId}
       disabled={isDisabled}
       className={twMerge(
         'rounded-primary-border-radius text-xl text-white px-5 py-2 transition-all duration-transition-duration hover:bg-secondary-color active:scale-110 cursor-pointer disabled:cursor-not-allowed disabled:bg-light-gray disabled:active:scale-100',

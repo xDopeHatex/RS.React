@@ -1,4 +1,4 @@
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import Spinner from '../components/UI/Spinner.tsx';
 import Button from '../components/UI/Button.tsx';
@@ -6,23 +6,18 @@ import { useGetAnimeByIdQuery } from '../services/apiSlices.ts';
 import AnimeCardCheckbox from '../components/AnimeCardCheckbox.tsx';
 import useTheme from '../hooks/useTheme.tsx';
 import { twMerge } from 'tailwind-merge';
+import useCloseDetails from '../hooks/useCloseDetails.tsx';
 
 const Details = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id');
   const sideBarRef = useRef<HTMLDivElement | null>(null);
-  const navigate = useNavigate();
   const theme = useTheme();
+  const closeDetailsHandler = useCloseDetails();
 
   const { data, isLoading, isError, error } = useGetAnimeByIdQuery({
     id: Number(id),
   });
-
-  const closeHandler = () => {
-    const url = new URLSearchParams(searchParams.toString());
-    url.delete('id');
-    navigate(`/home/?${url}`);
-  };
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -30,7 +25,7 @@ const Details = () => {
         sideBarRef.current &&
         !sideBarRef.current.contains(e.target as Node)
       ) {
-        closeHandler();
+        closeDetailsHandler();
       }
     };
     document.addEventListener('mousedown', handler);
@@ -102,7 +97,7 @@ const Details = () => {
           </div>
           <Button
             title={'close'}
-            onClick={closeHandler}
+            onClick={closeDetailsHandler}
             styles="absolute bottom-0 right-0 "
           />
         </div>
